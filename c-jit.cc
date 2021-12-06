@@ -2,32 +2,50 @@
 #include "c-jit.hh"
 
 extern "C" {
-#include "c2mir.h"
+#include "c2mir/c2mir.h"
 #include "mir-gen.h"
 }
 
+#include <vector>
+
 namespace cjit {
+
+using std::string;
+
+class StrBuf {
+    string str;
+    int len, pos = 0;
+public:
+    StrBuf(const string &str) : str(str), len(str.length()) { }
+    int getc() {
+        return pos >= len ? EOF : str[pos++];
+    }
+};
+
+static int cjit_getc(void *data) {
+    return static_cast<StrBuf*>(data)->getc();
+}
 
 class RealCompiler : public JitCompiler {
     MIR_context_t ctx_;
     c2mir_options c2m_opt_;
-    bool debug_ = false;
+    bool debug_ = true;
 
     void initCompilerOptions() {
         memset(&c2m_opt_, 0, sizeof(c2m_opt_));
         if (debug_) {
-            c2m_opt_.messaeg_file = stdout; // for debug
+            c2m_opt_.message_file = stdout; // for debug
         }
     }
 public:
     RealCompiler() {
         ctx_ = MIR_init();
         initCompilerOptions();
-        MIR_gen_init (ctx, 1);  // gens_num=1
+        MIR_gen_init (ctx_, 1);  // gens_num=1
     }
     ~RealCompiler() {
-        MIT_finish(ctx_);
-        MIR_gen_finish (ctx);
+        MIR_finish(ctx_);
+        MIR_gen_finish (ctx_);
     }
 
     CompiledInfo compile(const std::string &c_code) {
@@ -47,15 +65,15 @@ public:
         }
         MIR_item_t func = funcs.front(); // TBD: support multi-functions
 
-        MIR_gen_set_optimize_level (ctx, 0, 2); // gen_num=0, level=2
+        MIR_gen_set_optimize_level (ctx_, 0, 2); // gen_num=0, level=2
         if (debug_) {
-            MIR_gen_set_debug_file (ctx, 0, stdout);
-            MIR_gen_set_debug_level (ctx, 0, 1);
+            MIR_gen_set_debug_file (ctx_, 0, stdout);
+            MIR_gen_set_debug_level (ctx_, 0, 3);
         }
-        MIR_link (ctx, MIR_set_gen_interface, NULL);
+        MIR_link (ctx_, MIR_set_gen_interface, NULL);
 
         info.id = NULL;
-        info.binary = MIR_gen (ctx, 0, func);
+        info.binary = MIR_gen (ctx_, 0, func);
 
         return info;
     }

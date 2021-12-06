@@ -1,6 +1,6 @@
 // -*- C++ -*-
 
-#progma once
+#pragma once
 
 #include <string>
 
