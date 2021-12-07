@@ -1,7 +1,12 @@
 
 # My ToDo List
 
- - finish simple cjit compiler, pass sanity test.
- - import utest in test system.
- - use more directories structure, add cmake support. (cjit/c-jit.hh cjit/c-jit.cc utest/xxx.cc)
- - add "third-part/" folder for mir or maybe LLVM backend.
+ [ ] import and use utest in test system.
+ [ ] add first 2-3 test cases.
+
+## Done Items
+
+ [x] finish simple cjit compiler, pass sanity test.
+ [x] use more directories structure, add cmake support. (cjit/c-jit.hh cjit/c-jit.cc utest/xxx.cc)
+ [x] add "third-part/" folder for mir or maybe LLVM backend.
+

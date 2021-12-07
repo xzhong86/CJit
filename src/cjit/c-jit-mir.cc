@@ -26,7 +26,7 @@ static int cjit_getc(void *data) {
     return static_cast<StrBuf*>(data)->getc();
 }
 
-class RealCompiler : public JitCompiler {
+class MirCompiler : public JitCompiler {
     MIR_context_t ctx_;
     c2mir_options c2m_opt_;
     bool debug_ = false;
@@ -38,12 +38,12 @@ class RealCompiler : public JitCompiler {
         }
     }
 public:
-    RealCompiler() {
+    MirCompiler() {
         ctx_ = MIR_init();
         initCompilerOptions();
         MIR_gen_init (ctx_, 1);  // gens_num=1
     }
-    ~RealCompiler() {
+    ~MirCompiler() {
         MIR_finish(ctx_);
         MIR_gen_finish (ctx_);
     }
@@ -80,9 +80,10 @@ public:
     }
 };
 
-JitCompiler *JitCompiler::create()
+template <>
+JitCompiler *create<MirCompiler>()
 {
-    return new RealCompiler();
+    return new MirCompiler();
 }
 
 } // namespace
