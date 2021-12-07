@@ -1,5 +1,5 @@
 
-#include "c-jit.hh"
+#include <cjit/c-jit.hh>
 
 #include <iostream>
 
