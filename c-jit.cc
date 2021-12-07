@@ -29,7 +29,7 @@ static int cjit_getc(void *data) {
 class RealCompiler : public JitCompiler {
     MIR_context_t ctx_;
     c2mir_options c2m_opt_;
-    bool debug_ = true;
+    bool debug_ = false;
 
     void initCompilerOptions() {
         memset(&c2m_opt_, 0, sizeof(c2m_opt_));
@@ -65,6 +65,7 @@ public:
         }
         MIR_item_t func = funcs.front(); // TBD: support multi-functions
 
+        MIR_load_module(ctx_, m);
         MIR_gen_set_optimize_level (ctx_, 0, 2); // gen_num=0, level=2
         if (debug_) {
             MIR_gen_set_debug_file (ctx_, 0, stdout);
