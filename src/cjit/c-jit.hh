@@ -15,6 +15,7 @@ class JitCompiler {
 public:
     virtual ~JitCompiler() {}
 
+    virtual void importSymbol(const std::string &name, void *ptr) = 0;
     virtual CompiledInfo compile(const std::string &c_code) = 0;
 };
 

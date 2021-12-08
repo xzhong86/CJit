@@ -48,7 +48,10 @@ public:
         MIR_finish(ctx_);
     }
 
-    CompiledInfo compile(const std::string &c_code) {
+    void importSymbol(const std::string &name, void *p) override {
+        MIR_load_external(ctx_, name.c_str(), p);
+    }
+    CompiledInfo compile(const std::string &c_code) override {
         StrBuf buf(c_code);
         CompiledInfo info;
 
