@@ -58,3 +58,18 @@ UTEST_F(JitC, call_ext) {
     ASSERT_EQ(5, fun(15));
 }
 
+UTEST_F(JitC, simple_micro) {
+    auto *compiler = JITC;
+    const char *c_code = "           \
+    #define POW(x) ((x) * (x))       \n\
+    int func_add(int a, int b) {     \
+        return POW(a) + POW(b);      \
+    }\n";
+    // NOTE: newline after macro defination is needed.
+    cjit::CompiledInfo info = compiler->compile(c_code);
+
+    typedef int (*fun_p)(int, int);
+    fun_p fun = (fun_p)info.binary;
+
+    ASSERT_EQ(13, fun(2, 3));
+}
