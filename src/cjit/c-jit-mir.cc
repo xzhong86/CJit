@@ -44,8 +44,8 @@ public:
         MIR_gen_init (ctx_, 1);  // gens_num=1
     }
     ~MirCompiler() {
-        MIR_finish(ctx_);
         MIR_gen_finish (ctx_);
+        MIR_finish(ctx_);
     }
 
     CompiledInfo compile(const std::string &c_code) {
