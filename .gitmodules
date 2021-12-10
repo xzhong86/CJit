@@ -1,0 +1,6 @@
+[submodule "third-part/utest"]
+	path = third-part/utest
+	url = https://github.com/sheredom/utest.h.git
+[submodule "third-part/mir"]
+	path = third-part/mir
+	url = https://github.com/vnmakarov/mir.git
